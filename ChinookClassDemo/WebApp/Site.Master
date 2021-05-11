@@ -66,6 +66,10 @@
                                         href="~/SamplePages/TestPage.aspx"
                                         style="color:black" runat="server">
                                    Test menu page</a>
+                                <a class="dropdown-item"
+                                        href="~/SamplePages/AlbumsForArtist.aspx"
+                                        style="color:black" runat="server">
+                                   Albums for Artist</a>
                             </div>
                          </li>
                          <li class="nav-item">
