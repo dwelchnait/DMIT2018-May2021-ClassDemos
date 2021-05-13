@@ -1,8 +1,11 @@
 ﻿<%@ Page Title="Albums for Artist" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AlbumsForArtist.aspx.cs" Inherits="WebApp.SamplePages.AlbumsForArtist" %>
 
+<%@ Register Src="~/UserControls/MessageUserControl.ascx" TagPrefix="uc1" TagName="MessageUserControl" %>
+
+
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <h1>Albums for Artist</h1>
-    <asp:Label ID="Message" runat="server"></asp:Label>
+    <uc1:MessageUserControl runat="server" ID="MessageUserControl" />
     <br /><br />
     <label style="font-size: x-large; font-weight: 700">Select an Artist:&nbsp;</label>
     <asp:DropDownList ID="ArtistList" runat="server" 

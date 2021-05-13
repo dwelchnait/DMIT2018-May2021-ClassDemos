@@ -24,7 +24,7 @@ namespace WebApp.SamplePages
         {
             if (ArtistList.SelectedIndex == 0)
             {
-                Message.Text = "No artist has been selected";
+                MessageUserControl.ShowInfo("Artist Selection","No artist has been selected");
             }
             else
             {
@@ -40,10 +40,14 @@ namespace WebApp.SamplePages
 
         protected void RefreshList()
         {
-            AlbumController sysmgr = new AlbumController();
-            List<AlbumItem> info = sysmgr.Albums_GetByArtist(int.Parse(ArtistList.SelectedValue));
-            AlbumsofArtistList.DataSource = info;
-            AlbumsofArtistList.DataBind();
+            //error handling for the class library calls
+            MessageUserControl.TryRun(() => {
+                AlbumController sysmgr = new AlbumController();
+                List<AlbumItem> info = sysmgr.Albums_GetByArtist(int.Parse(ArtistList.SelectedValue));
+                AlbumsofArtistList.DataSource = info;
+                AlbumsofArtistList.DataBind();
+            },"Artist Albums List","View artist albums");
+
         }
     }
 }
