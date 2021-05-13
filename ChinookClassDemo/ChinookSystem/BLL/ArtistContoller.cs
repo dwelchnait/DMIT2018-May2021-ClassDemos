@@ -29,6 +29,7 @@ namespace ChinookSystem.BLL
                                                             ValueField = row.ArtistId,
                                                             DisplayField = row.Name
                                                         });
+
                 return results.OrderBy(x => x.DisplayField).ToList();
             }
         }

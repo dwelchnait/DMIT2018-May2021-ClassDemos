@@ -20,6 +20,12 @@ namespace WebApp.SamplePages
             
         }
 
+        protected void SelectCheckForException(object sender,
+                               ObjectDataSourceStatusEventArgs e)
+        {
+            MessageUserControl.HandleDataBoundException(e);
+        }
+
         protected void FetchAlbums_Click(object sender, EventArgs e)
         {
             if (ArtistList.SelectedIndex == 0)
