@@ -1,20 +1,21 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-#region Additional Namespaces
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-#endregion
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.Spatial;
 
 namespace ChinookSystem.Entities
 {
-    [Table("Albums")]
-    internal class Album
+
+
+    internal partial class Album
     {
-        [Key]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Album()
+        {
+            Tracks = new HashSet<Track>();
+        }
+
         public int AlbumId { get; set; }
 
         [Required(ErrorMessage = "Album title is required.")]
@@ -27,6 +28,14 @@ namespace ChinookSystem.Entities
 
         [StringLength(50, MinimumLength = 0, ErrorMessage = "Album release label is limited to 50 characters")]
         public string ReleaseLabel { get; set; }
+
+
+        //Navigational properties
+        //Navigational properties create a virtual relational presents that
+        //  you can use in your application
+        public virtual Artist Artist { get; set; }  //parent
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Track> Tracks { get; set; }  //children
     }
 }
-
