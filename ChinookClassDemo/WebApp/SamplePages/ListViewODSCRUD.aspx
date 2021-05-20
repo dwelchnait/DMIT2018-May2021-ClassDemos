@@ -16,6 +16,14 @@
     </div>
     <div class="row">
         <uc1:MessageUserControl runat="server" ID="MessageUserControl" />
+
+        <%-- Validation Summary is setup ONE for EACH validation group --%>
+        <asp:ValidationSummary ID="ValidationSummaryEdit" runat="server" 
+             HeaderText="Following are concerns with your data while editting"
+             ValidationGroup="egroup"/>
+         <asp:ValidationSummary ID="ValidationSummaryInsert" runat="server" 
+             HeaderText="Following are concerns with your data while inserting"
+             ValidationGroup="igroup"/>
     </div>
     <div class="row">
         <%-- IF, you can not delete, CHECK to see if you are missing the DataKeyNames parameter
@@ -32,7 +40,8 @@
                         <asp:Button runat="server" CommandName="Edit" Text="Edit" ID="EditButton" />
                     </td>
                     <td>
-                        <asp:Label Text='<%# Eval("AlbumId") %>' runat="server" ID="AlbumIdLabel" /></td>
+                        <asp:Label Text='<%# Eval("AlbumId") %>' runat="server" 
+                            ID="AlbumIdLabel" /></td>
                     <td>
                         <asp:Label Text='<%# Eval("Title") %>' runat="server" ID="TitleLabel" /></td>
                     <td>
@@ -44,21 +53,55 @@
                 </tr>
             </AlternatingItemTemplate>
             <EditItemTemplate>
+                <%-- validation controls will be placed inside the associate template
+                     The ID of the validated control needs to be unique
+                     The validation controls for a particular template needs to be grouped *****
+                     The validation executes ONLY on the use of the template where the group is
+                        tied to the Button--%>
+                <asp:RequiredFieldValidator ID="RequiredTitleE" runat="server" 
+                    ErrorMessage="Album title is required" Display="None"
+                     ControlToValidate="TitleTextBoxE" ValidationGroup="egroup" >
+                </asp:RequiredFieldValidator>
+                <asp:RegularExpressionValidator ID="RegExTitleE" runat="server" 
+                    ErrorMessage="Album title is limited to 160 characters" Display="None"
+                     ControlToValidate="TitleTextBoxE" ValidationGroup="egroup"
+                     ValidationExpression="^.{1,10}$">
+                </asp:RegularExpressionValidator>
+                <asp:RegularExpressionValidator ID="RegExReleaseLabelE" runat="server" 
+                    ErrorMessage="Album label is limited to 50 characters" Display="None"
+                     ControlToValidate="ReleaseLabelTextBoxE" ValidationGroup="egroup"
+                     ValidationExpression="^.{0,5}$">
+                </asp:RegularExpressionValidator>
+                <asp:RangeValidator ID="RangeReleaseYearE" runat="server" 
+                    ErrorMessage="Release year must between 1950 and this year" Display="None"
+                     ControlToValidate="ReleaseYearTextBoxE" MinimumValue="1950"
+                     MaximumValue="<%# DateTime.Today.Year %>" ValidationGroup="egroup">
+                </asp:RangeValidator>
                 <tr style="background-color: #999999;">
                     <td>
-                        <asp:Button runat="server" CommandName="Update" Text="Update" ID="UpdateButton" />
-                        <asp:Button runat="server" CommandName="Cancel" Text="Cancel" ID="CancelButton" />
+                        <%-- tie the button to the appropriate validation group
+                            FAILURE to tie the button to the appropriate group will cause
+                            ALL validation on the page to execute--%>
+                        <asp:Button runat="server" CommandName="Update" Text="Update" 
+                            ID="UpdateButton"  ValidationGroup="egroup"/>
+                        <asp:Button runat="server" CommandName="Cancel" Text="Cancel" 
+                            ID="CancelButton" />
                     </td>
                     <td>
-                        <asp:TextBox Text='<%# Bind("AlbumId") %>' runat="server" ID="AlbumIdTextBox" /></td>
+                        <asp:TextBox Text='<%# Bind("AlbumId") %>' runat="server" ID="AlbumIdTextBox"
+                             Enabled="false"/></td>
                     <td>
-                        <asp:TextBox Text='<%# Bind("Title") %>' runat="server" ID="TitleTextBox" /></td>
+                        <asp:TextBox Text='<%# Bind("Title") %>' runat="server" 
+                            ID="TitleTextBoxE" /></td>
                     <td>
                         <asp:TextBox Text='<%# Bind("ArtistId") %>' runat="server" ID="ArtistIdTextBox" /></td>
                     <td>
-                        <asp:TextBox Text='<%# Bind("ReleaseYear") %>' runat="server" ID="ReleaseYearTextBox" /></td>
+                        <asp:TextBox Text='<%# Bind("ReleaseYear") %>' runat="server" 
+                            ID="ReleaseYearTextBoxE" 
+                            TextMode="Number" step="1" min="1950" required="true" /></td>
                     <td>
-                        <asp:TextBox Text='<%# Bind("ReleaseLabel") %>' runat="server" ID="ReleaseLabelTextBox" /></td>
+                        <asp:TextBox Text='<%# Bind("ReleaseLabel") %>' runat="server" 
+                            ID="ReleaseLabelTextBoxE" /></td>
                 </tr>
             </EditItemTemplate>
             <EmptyDataTemplate>
@@ -69,21 +112,47 @@
                 </table>
             </EmptyDataTemplate>
             <InsertItemTemplate>
+                 <asp:RequiredFieldValidator ID="RequiredTitleI" runat="server" 
+                    ErrorMessage="Album title is required" Display="None"
+                     ControlToValidate="TitleTextBoxI" ValidationGroup="igroup" >
+                </asp:RequiredFieldValidator>
+                <asp:RegularExpressionValidator ID="RegExTitleI" runat="server" 
+                    ErrorMessage="Album title is limited to 160 characters" Display="None"
+                     ControlToValidate="TitleTextBoxI" ValidationGroup="igroup"
+                     ValidationExpression="^.{1,10}$">
+                </asp:RegularExpressionValidator>
+                <asp:RegularExpressionValidator ID="RegExReleaseLabelI" runat="server" 
+                    ErrorMessage="Album label is limited to 50 characters" Display="None"
+                     ControlToValidate="ReleaseLabelTextBoxI" ValidationGroup="igroup"
+                     ValidationExpression="^.{0,5}$">
+                </asp:RegularExpressionValidator>
+                <asp:RangeValidator ID="RangeReleaseYearI" runat="server" 
+                    ErrorMessage="Release year must between 1950 and this year" Display="None"
+                     ControlToValidate="ReleaseYearTextBoxI" MinimumValue="1950"
+                     MaximumValue="<%# DateTime.Today.Year %>" ValidationGroup="igroup">
+                </asp:RangeValidator>
                 <tr style="">
                     <td>
-                        <asp:Button runat="server" CommandName="Insert" Text="Insert" ID="InsertButton" />
-                        <asp:Button runat="server" CommandName="Cancel" Text="Clear" ID="CancelButton" />
+                        <asp:Button runat="server" CommandName="Insert" Text="Insert" 
+                            ID="InsertButton"  ValidationGroup="igroup"/>
+                        <asp:Button runat="server" CommandName="Cancel" Text="Clear" 
+                            ID="CancelButton" />
                     </td>
                     <td>
-                        <asp:TextBox Text='<%# Bind("AlbumId") %>' runat="server" ID="AlbumIdTextBox" /></td>
+                        <asp:TextBox Text='<%# Bind("AlbumId") %>' runat="server" 
+                            ID="AlbumIdTextBox"  Enabled="false"/></td>
                     <td>
-                        <asp:TextBox Text='<%# Bind("Title") %>' runat="server" ID="TitleTextBox" /></td>
+                        <asp:TextBox Text='<%# Bind("Title") %>' runat="server" 
+                            ID="TitleTextBoxI" /></td>
                     <td>
                         <asp:TextBox Text='<%# Bind("ArtistId") %>' runat="server" ID="ArtistIdTextBox" /></td>
                     <td>
-                        <asp:TextBox Text='<%# Bind("ReleaseYear") %>' runat="server" ID="ReleaseYearTextBox" /></td>
+                        <asp:TextBox Text='<%# Bind("ReleaseYear") %>' runat="server" 
+                            ID="ReleaseYearTextBoxI" 
+                             TextMode="Number" step="1" min="1950" required="true"/></td>
                     <td>
-                        <asp:TextBox Text='<%# Bind("ReleaseLabel") %>' runat="server" ID="ReleaseLabelTextBox" /></td>
+                        <asp:TextBox Text='<%# Bind("ReleaseLabel") %>' runat="server" 
+                            ID="ReleaseLabelTextBoxI" /></td>
                 </tr>
             </InsertItemTemplate>
             <ItemTemplate>
