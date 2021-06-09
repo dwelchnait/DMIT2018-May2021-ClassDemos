@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="BLL\AlbumController.cs" />
     <Compile Include="BLL\ArtistContoller.cs" />
+    <Compile Include="BLL\EmployeeController.cs" />
     <Compile Include="Entities\Album.cs" />
     <Compile Include="Entities\Artist.cs" />
     <Compile Include="DAL\ChinookSystemContext.cs" />
@@ -73,6 +74,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AlbumItem.cs" />
     <Compile Include="ViewModels\ArtistAlbumsByTitleandYear.cs" />
+    <Compile Include="ViewModels\CustomerItem.cs" />
+    <Compile Include="ViewModels\EmployeeItem.cs" />
     <Compile Include="ViewModels\SelectionList.cs" />
   </ItemGroup>
   <ItemGroup>

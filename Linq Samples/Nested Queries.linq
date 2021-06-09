@@ -87,7 +87,41 @@ void Main()
 //Create a list of albums showing its title and artist.
 //Show albums with 25 or more tracks only.
 //Show the songs on the album listing the name and song length in seconds.
+	var numberoftracks = 25;
+	var albumlistq = from x in Albums
+					where x.Tracks.Count >= numberoftracks
+					select new AlbumOfArtist
+					{
+						Title = x.Title,
+						Artist = x.Artist.Name,
+						AlbumSongs = (from y in x.Tracks
+										select new Song
+										{
+											SongName = y.Name,
+											LengthInSeconds = y.Milliseconds / 1000.0
+										}
+									  ).ToList()
+					};
+	albumlistq.Dump("Artist Album with more than 25 tracks");
+	
+	// Artist Album with more than 25 tracks
 
+	var albumlistm = Albums
+   					.Where (x => (x.Tracks.Count >= numberoftracks))
+				    .Select (x => new AlbumOfArtist()
+				         {
+				            Title = x.Title, 
+				            Artist = x.Artist.Name, 
+				            AlbumSongs = x.Tracks
+							               .Select (y => new Song()
+							                     {
+							                        SongName = y.Name, 
+							                        LengthInSeconds = y.Milliseconds / 1000.0
+							                     }
+							               ).ToList ()
+				         }
+				   		);
+	albumlistm.Dump("Artist Album with more than 25 tracks");
 }
 
 // You can define other methods, fields, classes and namespaces here
@@ -108,4 +142,17 @@ public class EmployeeItem
 	public int NumberOfCustomers{get;set;}
 	//the list of customers associated with the employee
 	public List<CustomerItem> CustomerList{get;set;}
+}
+
+public class AlbumOfArtist
+{
+	public string Title{get;set;}
+	public string Artist{get;set;}
+	public List<Song> AlbumSongs{get;set;}
+}
+
+public class Song
+{
+	public string SongName{get;set;}
+	public double LengthInSeconds{get;set;}
 }
