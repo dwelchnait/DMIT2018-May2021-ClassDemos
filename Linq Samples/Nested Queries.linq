@@ -126,6 +126,9 @@ void Main()
 
 // You can define other methods, fields, classes and namespaces here
 // class for the customer info
+
+//these would be your ViewModel classes
+//the queries would be in your BLL methods.
 public class CustomerItem
 {
 	public string FullName{get;set;}
