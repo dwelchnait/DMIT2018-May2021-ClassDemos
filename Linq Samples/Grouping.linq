@@ -104,25 +104,25 @@
 //resultsgroupby.Dump("Using group in select");
 
 //group using an entity
-var resultsgentity= from x in Albums
-					where x.ReleaseYear > 1969 && x.ReleaseYear < 1980
-					group x by x.Artist into gTemp
-					orderby gTemp.Key.Name
-					where gTemp.Count() > 1
-					//select gTemp;
-					select new
-					{
-						KeyValue = gTemp.Key.Name,
-						numberofAlbums = gTemp.Count(),
-						GroupAlbums = from y in gTemp
-									  orderby y.ReleaseYear
-									  select new
-									  {
-									  	Title = y.Title,
-										Year = y.ReleaseYear
-									  }
-					};
-resultsgentity.Dump();
+//var resultsgentity= from x in Albums
+//					where x.ReleaseYear > 1969 && x.ReleaseYear < 1980
+//					group x by x.Artist into gTemp
+//					orderby gTemp.Key.Name
+//					where gTemp.Count() > 1
+//					//select gTemp;
+//					select new
+//					{
+//						KeyValue = gTemp.Key.Name,
+//						numberofAlbums = gTemp.Count(),
+//						GroupAlbums = from y in gTemp
+//									  orderby y.ReleaseYear
+//									  select new
+//									  {
+//									  	Title = y.Title,
+//										Year = y.ReleaseYear
+//									  }
+//					};
+//resultsgentity.Dump();
 
 //Create a query which will report the employee and their customer base.
 //List the employee fullname (phone), number of customer in their base.
@@ -136,10 +136,32 @@ resultsgentity.Dump();
 //      order by vs group by?
 //Can I subdivide (group) my details into specific piles? If so, on what?
 //      Employee (smaller piles of data on xxxxxx)
-//Is ther an association between Customers and Employees?
+//Is there an association between Customers and Employees?
 //      nav property SupportRep
 
 
+//once you have done your "into xxxx" on the select, you are processing
+//   ONE small pile of records in the select
+//You continute to process each small "pile" of records, one after another
+var results = from x in Customers
+				group x by x.SupportRep into gTemp
+				select new
+				{ 
+					Employee = gTemp.Key == null ? "Unassigned" :
+									gTemp.Key.LastName + ", " +
+									gTemp.Key.FirstName + " (" +
+									gTemp.Key.Phone + ")",
+				    NumberOfCustomers = gTemp.Count(),
+					CustomerList = from y in gTemp
+									select new
+									{
+										CustName = y.LastName + ", " +
+											y.FirstName,
+										City = y.City,
+										State = y.State
+									}
+				};
+results.Dump();
 
 
 
