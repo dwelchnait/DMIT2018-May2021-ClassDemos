@@ -74,6 +74,14 @@
                                         href="~/SamplePages/ListViewODSCRUD.aspx"
                                         style="color:black" runat="server">
                                    ListView CRUD ODS</a>
+                                <a class="dropdown-item"
+                                        href="~/SamplePages/ODSRepeater.aspx"
+                                        style="color:black" runat="server">
+                                   Repeater Web control</a>
+                                <a class="dropdown-item"
+                                        href="~/SamplePages/ManagePlaylist.aspx"
+                                        style="color:black" runat="server">
+                                  OLTP Manage Playlist</a>
                             </div>
                          </li>
                          <li class="nav-item">
