@@ -2,6 +2,9 @@
     AutoEventWireup="true" CodeBehind="ManagePlaylist.aspx.cs" 
     Inherits="WebApp.SamplePages.ManagePlaylist" %>
 
+<%@ Register Src="~/UserControls/MessageUserControl.ascx" TagPrefix="uc1" TagName="MessageUserControl" %>
+
+
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 <div>
@@ -10,7 +13,7 @@
 <div class="row">
     <div class="offset-1">
          <%--Add MessageUserControl--%>
-
+        <uc1:MessageUserControl runat="server" ID="MessageUserControl" />
     </div>
 </div>
    
@@ -30,7 +33,13 @@
             Width="150px" DataSourceID="GenreDDLODS" 
             DataTextField="DisplayField" 
             DataValueField="ValueField">
-        </asp:DropDownList><br />
+        </asp:DropDownList>
+            <asp:ObjectDataSource ID="GenreDDLODS" runat="server" 
+                OldValuesParameterFormatString="original_{0}" 
+                SelectMethod="List_GenreNames" 
+                 OnSelected="SelectCheckForException"
+                TypeName="ChinookSystem.BLL.GenreController">
+            </asp:ObjectDataSource><br />
         <asp:Button ID="GenreFetch" runat="server" Text="Fetch" OnClick="GenreFetch_Click" 
             />
         <br /><br />
@@ -216,11 +225,7 @@
 
 </div>
  
-    <asp:ObjectDataSource ID="GenreDDLODS" runat="server" 
-        OldValuesParameterFormatString="original_{0}" 
-        SelectMethod="List_GenreNames" 
-        TypeName="ChinookSystem.BLL.GenreController">
-    </asp:ObjectDataSource>
+
    
     <asp:ObjectDataSource ID="TrackSelectionListODS" runat="server" 
         OldValuesParameterFormatString="original_{0}" 
