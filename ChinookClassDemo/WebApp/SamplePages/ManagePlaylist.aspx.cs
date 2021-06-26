@@ -91,7 +91,51 @@ namespace WebApp.SamplePages
         protected void PlayListFetch_Click(object sender, EventArgs e)
         {
             //code to go here
- 
+            //username is coming from the system  via security
+            //since security has yet to be installed, a default will be
+            //  setup for the username value
+            string username = "HansenB";
+
+            //validate data present
+            if (string.IsNullOrWhiteSpace(PlaylistName.Text.Trim()))
+            {
+                MessageUserControl.ShowInfo("Playlist Search",
+                    "No playlist name was supplied");
+            }
+            else
+            {
+                //do a standard lookup
+                //assign results to a gridview
+                //use some user friendly error handling
+                //the way we are doing the error handling is using
+                //  MessageUserControl instead of try/catch
+                //MessageUserControl has the try/catch embedded within
+                //  the control logic
+                //Within the control there exists a method called .TryRun()
+                //syntax:
+                //  MessageUserControl.TryRun( () => {
+                //
+                //          your coding logic
+                //
+                //  }[, "Message title", "success message"]);
+                //
+                MessageUserControl.TryRun(() =>
+                {
+                    //your code
+                    PlaylistTracksController sysmgr = new PlaylistTracksController();
+                    //the attachment of the playlist to the web control
+                    //      will be used throughout the web page; as such
+                    //      the code for refreshing is in its own method
+                    RefreshPlaylist(sysmgr, username);
+                },"Playlist Search","View the requested playlist below.");
+            }
+        }
+
+        protected void RefreshPlaylist(PlaylistTracksController sysmgr, string username)
+        {
+            List<UserPlaylistTrack> info = sysmgr.List_TracksForPlaylist(PlaylistName.Text, username);
+            PlayList.DataSource = info;
+            PlayList.DataBind();
         }
 
         protected void MoveDown_Click(object sender, EventArgs e)
