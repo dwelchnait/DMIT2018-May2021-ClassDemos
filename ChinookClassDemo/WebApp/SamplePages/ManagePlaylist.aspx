@@ -53,8 +53,8 @@
     </div>
     <div class="col-sm-9">
         <asp:Label ID="Label5" runat="server" Text="Tracks"></asp:Label>&nbsp;&nbsp;
-        <asp:Label ID="TracksBy" runat="server" ></asp:Label>&nbsp;&nbsp;
-        <asp:Label ID="SearchArg" runat="server" ></asp:Label><br />
+        <asp:Label ID="TracksBy" runat="server" visible="false" ></asp:Label>&nbsp;&nbsp;
+        <asp:HiddenField ID="SearchArg" runat="server" /><br />
         <asp:ListView ID="TracksSelectionList" runat="server"
             DataSourceID="TrackSelectionListODS"
             OnItemCommand="TracksSelectionList_ItemCommand"
@@ -224,17 +224,31 @@
     </div>
 
 </div>
- 
 
-   
     <asp:ObjectDataSource ID="TrackSelectionListODS" runat="server" 
+        OldValuesParameterFormatString="original_{0}" 
+        SelectMethod="List_TracksForPlaylistSelection" 
+         OnSelected="SelectCheckForException"
+        TypeName="ChinookSystem.BLL.TrackController">
+
+        <SelectParameters>
+            <asp:ControlParameter ControlID="TracksBy" 
+                PropertyName="Text" DefaultValue="zxcvg" 
+                Name="tracksby" Type="String"></asp:ControlParameter>
+            <asp:ControlParameter ControlID="SearchArg" 
+                PropertyName="Value" DefaultValue="zxcvg" 
+                Name="arg" Type="String"></asp:ControlParameter>
+        </SelectParameters>
+    </asp:ObjectDataSource>
+   
+  <%--  <asp:ObjectDataSource ID="TrackSelectionListODS" runat="server" 
         OldValuesParameterFormatString="original_{0}" 
         SelectMethod="List_TracksForPlaylistSelection" 
         TypeName="ChinookSystem.BLL.TrackController" >
         <SelectParameters>
             <asp:ControlParameter ControlID="TracksBy" PropertyName="Text" Name="tracksby" Type="String"></asp:ControlParameter>
-            <asp:ControlParameter ControlID="SearchArg" PropertyName="Text" Name="arg" Type="String"></asp:ControlParameter>
+            <asp:ControlParameter ControlID="SearchArg" PropertyName="Value" Name="arg" Type="String"></asp:ControlParameter>
         </SelectParameters>
-    </asp:ObjectDataSource>
+    </asp:ObjectDataSource>--%>
 
 </asp:Content>

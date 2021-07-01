@@ -68,24 +68,50 @@ namespace WebApp.SamplePages
 
         protected void ArtistFetch_Click(object sender, EventArgs e)
         {
-            
-                //code to go here
-
+            TracksBy.Text = "Artist";
+            if(string.IsNullOrEmpty(ArtistName.Text))
+            {
+                MessageUserControl.ShowInfo("You did not supply an artist name");
+                //the value parameter field is a HiddenField
+                //access to a HiddenField is by .Value NOT .Text
+                SearchArg.Value = "zxcvg";  // this is simply a garbage value
+            }
+            else
+            {
+                SearchArg.Value = ArtistName.Text;
+            }
+            //to force the re-execution of an ODS attached to a display control
+            //  rebind the display control
+            TracksSelectionList.DataBind();
           }
 
 
         protected void GenreFetch_Click(object sender, EventArgs e)
         {
-
-                //code to go here
-
+            TracksBy.Text = "Genre";
+            //in this example this is NO prompt line on the ddl.
+            //this means that no validation for selection needs to be done
+            SearchArg.Value = GenreDDL.SelectedValue;
+            TracksSelectionList.DataBind();
         }
 
         protected void AlbumFetch_Click(object sender, EventArgs e)
         {
-
-                //code to go here
-
+            TracksBy.Text = "Album";
+            if (string.IsNullOrEmpty(AlbumTitle.Text))
+            {
+                MessageUserControl.ShowInfo("You did not supply an album title");
+                //the value parameter field is a HiddenField
+                //access to a HiddenField is by .Value NOT .Text
+                SearchArg.Value = "zxcvg";  // this is simply a garbage value
+            }
+            else
+            {
+                SearchArg.Value = AlbumTitle.Text;
+            }
+            //to force the re-execution of an ODS attached to a display control
+            //  rebind the display control
+            TracksSelectionList.DataBind();
         }
 
         protected void PlayListFetch_Click(object sender, EventArgs e)
