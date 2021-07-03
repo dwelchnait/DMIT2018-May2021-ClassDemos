@@ -192,7 +192,26 @@ namespace WebApp.SamplePages
         protected void TracksSelectionList_ItemCommand(object sender, 
             ListViewCommandEventArgs e)
         {
-            //code to go here
+            string username = "HansenB"; // until security is implemented
+
+            //form event validation: Presence
+            if (string.IsNullOrEmpty(PlaylistName.Text))
+            {
+                MessageUserControl.ShowInfo("Missing Data", "Enter a playlist name.");
+            }
+            else
+            {
+                //access the contents of a control on the selected Listview row
+                string song = (e.Item.FindControl("Namelabel") as Label).Text;
+                int trackid = int.Parse(e.CommandArgument.ToString());
+
+                MessageUserControl.TryRun(() => {
+                    PlaylistTracksController sysmgr = new PlaylistTracksController();
+                    sysmgr.Add_TrackToPLaylist(PlaylistName.Text, username, trackid, song);
+                    RefreshPlaylist(sysmgr, username);
+                },"Add Track to Playlist","Track has been added to the playlist");
+
+            }
             
         }
 
