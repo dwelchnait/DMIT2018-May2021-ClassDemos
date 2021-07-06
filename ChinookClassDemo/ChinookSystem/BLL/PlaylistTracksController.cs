@@ -68,8 +68,82 @@ namespace ChinookSystem.BLL
                 }
 
 
-                //do I need to create a new playlist
+                //do I need to create a new playlist?
                 //  query for an existing playlist
+                playlistExist = (from x in context.Playlists
+                                where x.Name.Equals(playlistname)
+                                   && x.UserName.Equals(username)
+                                select x).FirstOrDefault();
+
+                //Is there a playlist?
+                if (playlistExist == null)
+                {
+                    //no playlist
+                    //create and set tracknumber to 1
+                    playlistExist = new Playlist()
+                    {
+                        Name = playlistname,
+                        UserName = username
+                    };
+                    //.Add simply stages your record to processing on the database
+                    context.Playlists.Add(playlistExist);
+                    tracknumber = 1;
+                }
+                else
+                {
+                    //set tracknumber to next highest
+                    //query for the current highest tracknumber
+                    tracknumber = context.PlaylistTracks
+                                    .Where(x => x.Playlist.Name.Equals(playlistname)
+                                    && x.Playlist.UserName.Equals(username))
+                                    .Count();
+                    tracknumber++;
+                    //check the business rule: no duplicate tracks
+                    playlisttrackExist = context.PlaylistTracks
+                                            .Where(x => x.Playlist.Name.Equals(playlistname)
+                                                && x.Playlist.UserName.Equals(username)
+                                                && x.TrackId == trackid)
+                                            .Select(x => x)
+                                            .FirstOrDefault();
+                    if (playlisttrackExist != null)
+                    {
+                        //duplicate
+                        brokenRules.Add(new BusinessRuleException<string>("Track already exists on the playlist. Duplicates are not allowed", nameof(song), song));
+                    }
+                }
+
+                //add the playlist track
+                playlisttrackExist = new PlaylistTrack();
+                //load the instance with data
+                playlisttrackExist.TrackId = trackid;
+                playlisttrackExist.TrackNumber = tracknumber;
+
+                //what about the playlistid?
+                //if this is a new playlist, what is the current value of PlaylistId in the
+                //      playlist instance? --> it is 0 (numeric default)
+
+                //to solve this problem, we will do an .Add via the navigational property
+                //  of the PlayList entity
+                //The processing will add the new Playlist then use the new identity value
+                //  in adding the PlaListTrack record
+                playlistExist.PlaylistTracks.Add(playlisttrackExist); //staged
+
+                //can I commit?
+                //are there any errors in this proces
+                if(brokenRules.Count() > 0)
+                {
+                    //at least one error was discovered during the processing of the
+                    //  transaction
+                    //throw all errors in one batch
+                    throw new BusinessRuleCollectionException("Add Playlist Track concerns:", brokenRules);
+                }
+                else
+                {
+                    //COMMIT THE TRANSACTION
+                    //NOTE: there is ONE and ONLY ONE .SaveChanges() in a transaction
+                    context.SaveChanges();
+                }
+
 
             }
         }//eom
