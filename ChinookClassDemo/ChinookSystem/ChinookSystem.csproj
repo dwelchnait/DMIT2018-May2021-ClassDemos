@@ -79,6 +79,7 @@
     <Compile Include="ViewModels\ArtistAlbumsByTitleandYear.cs" />
     <Compile Include="ViewModels\CustomerItem.cs" />
     <Compile Include="ViewModels\EmployeeItem.cs" />
+    <Compile Include="ViewModels\MoveTrackItem.cs" />
     <Compile Include="ViewModels\SelectionList.cs" />
     <Compile Include="ViewModels\TrackList.cs" />
     <Compile Include="ViewModels\UserPlaylistTrack.cs" />
