@@ -316,7 +316,7 @@ namespace WebApp.SamplePages
             MessageUserControl.TryRun(() =>
             {
                 PlaylistTracksController sysmgr = new PlaylistTracksController();
-                //sysmgr.MoveTrack(moveTrack);
+                sysmgr.MoveTrack(moveTrack);
                 RefreshPlaylist(sysmgr, username);
             },"Track Movement", "Track has been moved.");
  
