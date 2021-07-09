@@ -236,13 +236,55 @@ namespace ChinookSystem.BLL
                             }
                         }
                         else
-                        {
+                        { 
+                            //down movement
+                            if (playlisttrackExist.TrackNumber == numberoftracks)
+                            {
+                                brokenRules.Add(new BusinessRuleException<string>("Playlist track already at the bottom. Unable to move track.", nameof(Track.Name), playlisttrackExist.Track.Name));
+                            }
+                            else
+                            {
+                                //do the move
+                                PlaylistTrack othertrack = (from x in context.PlaylistTracks
+                                                            where x.Playlist.Name.Equals(moveTrack.PlaylistName)
+                                                               && x.Playlist.UserName.Equals(moveTrack.UserName)
+                                                               && x.TrackNumber == playlisttrackExist.TrackNumber + 1
+                                                            select x).FirstOrDefault();
+                                if (othertrack == null)
+                                {
+                                    brokenRules.Add(new BusinessRuleException<string>("Playlist track to swap seems to be missing. Refresh your display.", nameof(MoveTrackItem.PlaylistName), moveTrack.PlaylistName));
+                                }
+                                else
+                                {
+                                    //good to swap
+                                    playlisttrackExist.TrackNumber += 1;
+                                    othertrack.TrackNumber -= 1;
+                                    //staging for single field update on a record
+                                    context.Entry(playlisttrackExist).Property(nameof(PlaylistTrack.TrackNumber)).IsModified = true;
+                                    context.Entry(othertrack).Property(nameof(PlaylistTrack.TrackNumber)).IsModified = true;
+                                }
+                            }
 
                         }
                     }
-
-                    //commit??
                 }
+                
+                //commit??
+                //are there any errors in this proces
+                if (brokenRules.Count() > 0)
+                {
+                    //at least one error was discovered during the processing of the
+                    //  transaction
+                    //throw all errors in one batch
+                    throw new BusinessRuleCollectionException("Move Playlist Track concerns:", brokenRules);
+                }
+                else
+                {
+                    //COMMIT THE TRANSACTION
+                    //NOTE: there is ONE and ONLY ONE .SaveChanges() in a transaction
+                    context.SaveChanges();
+                }
+               
             }
         }//eom
 
