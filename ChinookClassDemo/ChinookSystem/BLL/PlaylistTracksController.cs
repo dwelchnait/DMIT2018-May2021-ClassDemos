@@ -291,11 +291,85 @@ namespace ChinookSystem.BLL
 
         public void DeleteTracks(string username, string playlistname, List<int> trackstodelete)
         {
+            Playlist playlistExist = null;
+            PlaylistTrack playlisttrackExist = null;
             using (var context = new ChinookSystemContext())
             {
-               //code to go here
+                //code to go here
+                if (string.IsNullOrEmpty(playlistname))
+                {
+                    brokenRules.Add(new BusinessRuleException<string>("Playlist name is missing. Unable to remove track(s).", "Playlist Name", "missing"));
+                }
+                if (string.IsNullOrEmpty(username))
+                {
+                    brokenRules.Add(new BusinessRuleException<string>("User name is missing. Unable to remove track(s).", "User Name", "missing"));
+                }
+                if (trackstodelete.Count <= 0)
+                {
+                    brokenRules.Add(new BusinessRuleException<string>("The were no requested tracks to remove. ", "Track selection", " empty"));
+                }
 
+                playlistExist = (from x in context.Playlists
+                                 where x.Name.Equals(playlistname)
+                                    && x.UserName.Equals(username)
+                                 select x).FirstOrDefault();
+                if (playlistExist == null)
+                {
+                    brokenRules.Add(new BusinessRuleException<string>("Playlist no longer exists. Unable to remove track(s0.", "Playlist Name", playlistname));
+                }
+                else
+                {
+                    //kept a separate collection of the tracks to kept (query ORDERED BY TRACKNUMBER)
+                    var trackskept = context.PlaylistTracks
+                                    .Where(x => x.Playlist.Name.Equals(playlistname)
+                                    && x.Playlist.UserName.Equals(username)
+                                    && !trackstodelete.Any(tod => tod == x.TrackId))
+                                    .OrderBy(x => x.TrackNumber)
+                                    .Select(x => x);
 
+                    //traverse the removal track list (of trackids) and
+                    //  remove each track in the list
+                    foreach (int deletetrackid in trackstodelete)
+                    {
+                        playlisttrackExist = (from x in context.PlaylistTracks
+                                              where x.Playlist.Name.Equals(playlistname)
+                                                 && x.Playlist.UserName.Equals(username)
+                                                 && x.TrackId == deletetrackid
+                                              select x).FirstOrDefault();
+                        //stage track to be deleted
+                        if (playlisttrackExist != null)
+                        {
+                            playlistExist.PlaylistTracks.Remove(playlisttrackExist);
+                        }
+                    }
+                    // 1 2 3 4 6 8 12
+                    //what if we simply renumber
+                    // 1 2 3 4 5 7 8
+                    //renumber the kept separate collection
+                    int tracknumber = 1;
+                    foreach (var track in trackskept)
+                    {
+                        track.TrackNumber = tracknumber;
+                        context.Entry(track).Property(nameof(PlaylistTrack.TrackNumber)).IsModified = true;
+                        tracknumber++;
+                    }
+                }
+
+                //commit
+                //are there any errors in this proces
+                if (brokenRules.Count() > 0)
+                {
+                    //at least one error was discovered during the processing of the
+                    //  transaction
+                    //throw all errors in one batch
+                    throw new BusinessRuleCollectionException("Remove Playlist Track concerns:", brokenRules);
+                }
+                else
+                {
+                    //COMMIT THE TRANSACTION
+                    //NOTE: there is ONE and ONLY ONE .SaveChanges() in a transaction
+                    context.SaveChanges();
+                }
             }
         }//eom
     }
