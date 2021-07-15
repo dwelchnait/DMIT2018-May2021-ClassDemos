@@ -1,0 +1,134 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="WebApp.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %></title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="css/font-awesome.css" rel="stylesheet" />
+
+</head>
+<body>
+    <form runat="server">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--To learn more about bundling scripts in ScriptManager see https://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Framework Scripts--%>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="bootstrap" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+                <%--Site Scripts--%>
+            </Scripts>
+        </asp:ScriptManager>
+
+       <div class="container">
+            <div class="navbar navbar-inverse">
+          <nav class="navbar navbar-expand-md navbar-light fixed-top">
+              <a class="navbar-brand" href="Default.aspx" runat="server">
+                        <strong>Bootstrap 4+</strong>
+              </a>
+              <button class="navbar-toggler" type="button"
+                        data-toggle="collapse" data-target="#navbarMenuName"
+                        aria-controls="navbarMenuName" aria-expanded="false"
+                        aria-label="Toggle Navigation">
+               <span class="navbar-toggler-icon"></span>
+               </button>
+               <div class="collapse navbar-collapse" id="navbarMenuName">
+                  <ul class="navbar-nav">
+                      <li class="nav-item">
+                          <a class="nav-link" href="~/Default.aspx"
+                                    style="color:black" runat="server">Home</a>
+                       </li>
+                       <li class="nav-item dropdown">
+                           <a class="nav-link dropdown-toggle" href="#"
+                                    id="navbarSubMenu" data-toggle="dropdown" 
+                                    runat="server" style="color:black"
+                                    aria-haspopup="true" aria-expanded="false"> 
+                                Samples</a>
+                            <div class="dropdown-menu" aria-labelledby="navbarSubMenu">
+                                <a class="dropdown-item"
+                                        href="~/SamplePages/TestPage.aspx"
+                                        style="color:black" runat="server">
+                                   Test menu page</a>
+                                <a class="dropdown-item"
+                                        href="~/SamplePages/AlbumsForArtist.aspx"
+                                        style="color:black" runat="server">
+                                   Albums for Artist</a>
+                                <a class="dropdown-item"
+                                        href="~/SamplePages/ListViewODSCRUD.aspx"
+                                        style="color:black" runat="server">
+                                   ListView CRUD ODS</a>
+                                <a class="dropdown-item"
+                                        href="~/SamplePages/ODSRepeater.aspx"
+                                        style="color:black" runat="server">
+                                   Repeater Web control</a>
+                                <a class="dropdown-item"
+                                        href="~/SamplePages/ManagePlaylist.aspx"
+                                        style="color:black" runat="server">
+                                  OLTP Manage Playlist</a>
+                            </div>
+                         </li>
+                         <li class="nav-item">
+                             <a class="nav-link" href="~/Contact.aspx" runat="server"
+                                    style="color:black">Contact</a>
+                          </li>
+                          <li class="nav-item">
+                             <a class="nav-link" href="~/About.aspx" runat="server"
+                                    style="color:black">About</a>
+                           </li>
+                        </ul>
+                    </div>
+                    <div style="padding-right:50px">
+                        <asp:LoginView runat="server" ViewStateMode="Disabled">
+                            <AnonymousTemplate>
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li><a runat="server" href="~/Account/Register"
+                                              style="color:black">Register</a></li>&nbsp;&nbsp;
+                                    <li><a runat="server" href="~/Account/Login" style="color:black">Log in</a></li>
+                                </ul>
+                            </AnonymousTemplate>
+                            <LoggedInTemplate>
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li><a runat="server" href="~/Account/Manage" title="Manage your account"
+                                            style="color:black">Hello, <%: Context.User.Identity.GetUserName()  %> !
+                                        </a></li>&nbsp;&nbsp;
+                                    <li>
+                                        <asp:LoginStatus runat="server" LogoutAction="Redirect" LogoutText="Log off"
+                                               LogoutPageUrl="~/" OnLoggingOut="Unnamed_LoggingOut" />
+                                    </li>
+                                </ul>
+                            </LoggedInTemplate>
+                        </asp:LoginView>
+                    </div>
+                </nav> 
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+            <hr />
+            <footer>
+                <p>&copy; <%: DateTime.Now.Year %> NAIT DMIT2018 all rights reserved</p>
+            </footer>
+        </div>
+    </form>
+</body>
+</html>
