@@ -48,7 +48,7 @@ namespace WebApp.Security
             {
                 UserName = theUser,
                 Email = theEmail,
-                EmployeeId = 3,
+                EmployeeId = 2,
                 CustomerId = null
             }, thePassword);
             if (result.Succeeded)
@@ -80,8 +80,8 @@ namespace WebApp.Security
             {
                 UserName = theUser,
                 Email = theEmail,
-                EmployeeId = 3,
-                CustomerId = null
+                EmployeeId = null,
+                CustomerId = 4
             }, thePassword);
             if (result.Succeeded)
                 userManager.AddToRole(userManager.FindByName(theUser).Id, theRole);

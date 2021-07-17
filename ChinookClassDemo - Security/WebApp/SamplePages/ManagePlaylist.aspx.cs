@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -8,7 +9,8 @@ using System.Web.UI.WebControls;
 #region Additonal Namespaces
 using ChinookSystem.BLL;
 using ChinookSystem.ViewModels;
-
+using System.Configuration;
+using WebApp.Security;
 #endregion
 
 namespace WebApp.SamplePages
@@ -18,6 +20,37 @@ namespace WebApp.SamplePages
         protected void Page_Load(object sender, EventArgs e)
         {
             TracksSelectionList.DataSource = null;
+
+            //using form security
+            //check to see if the user is logged in
+            if(Request.IsAuthenticated)
+            {
+                //check to see if the logged user is in the allowable role(s)
+                //    to have acces to this page.
+                //if (User.IsInRole(ConfigurationManager.AppSettings["customerRole"]) ||
+                //    User.IsInRole("Administrator"))
+                if (User.IsInRole(ConfigurationManager.AppSettings["customerRole"]))
+                {
+                    //LoggedUser.Text = User.Identity.Name;
+
+                    //obtain the customer ID from the ApplicationUser record
+                    SecurityController secmgr = new SecurityController();
+                    int customerid = secmgr.GetCurrentUserCustomerId(User.Identity.Name) ?? 0;
+                    LoggedUser.Text = customerid.ToString();
+
+                    //to get the Customer personal data using the pkey value
+                    //  obtained from the ApplicationUser record, simply
+                    //  make a query to your database with the pkey value.
+                }
+                else
+                {
+                    Response.Redirect("~/SamplePages/AccessDenied");
+                }
+            }
+            else
+            {
+                Response.Redirect("~/Account/Login.aspx");
+            }
         }
 
         #region Error Handling
@@ -120,7 +153,10 @@ namespace WebApp.SamplePages
             //username is coming from the system  via security
             //since security has yet to be installed, a default will be
             //  setup for the username value
-            string username = "HansenB";
+            //string username = "HansenB";
+
+            //security has now been install for the system
+            string username = User.Identity.Name;
 
             //validate data present
             if (string.IsNullOrWhiteSpace(PlaylistName.Text.Trim()))
